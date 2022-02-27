@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-    
+from re import I
 from src.logger import logger, loggerMapClicked
 from cv2 import cv2
 from os import listdir
@@ -341,7 +342,10 @@ def login():
         logger('🎉 Connect wallet button detected, logging in!')
         login_attempts = login_attempts + 1
         #TODO mto ele da erro e poco o botao n abre
-        # time.sleep(10)
+        # time.sleep(10
+        
+    if clickBtn(images['fox-connect'], timeout = 10):
+        logger('🎉 fox button detected')
 
     if clickBtn(images['select-wallet-2'], timeout=8):
         # sometimes the sign popup appears imediately
@@ -488,6 +492,11 @@ def main():
     while True:
         now = time.time()
 
+        if now - last["login"] > addRandomness(t['check_for_login'] * 60):
+                    sys.stdout.flush()
+                    last["login"] = now
+                    login()
+            
         if now - last["check_for_captcha"] > addRandomness(t['check_for_captcha'] * 60):
             last["check_for_captcha"] = now
 
@@ -495,10 +504,7 @@ def main():
             last["heroes"] = now
             refreshHeroes()
 
-        if now - last["login"] > addRandomness(t['check_for_login'] * 60):
-            sys.stdout.flush()
-            last["login"] = now
-            login()
+     
 
         if now - last["new_map"] > t['check_for_new_map_button']:
             last["new_map"] = now
